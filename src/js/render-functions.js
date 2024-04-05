@@ -1,49 +1,27 @@
-import iziToast from 'izitoast';
-import 'izitoast/dist/css/iziToast.min.css';
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
 
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
-
-export function renderImgs(images) {
-  const setGallery = document.querySelector('ul.gallery'); 
-
-  setGallery.innerHTML = '';
-
-  const imgGallery = images 
-    .map(
-      image => `<li class="img-blok">
-        <a href="${image.largeImageURL}">     
-    <img  src="${image.webformatURL}"
-    data-source="${image.largeImageURL}"
-    alt="${image.tags}">
-   
-    <ul class="image-descript">
-  <li>
-    <h3>likes</h3>
-    <p>${image.likes}</p>
-  </li>
-  <li>
-    <h3>views</h3>
-    <p>${image.views}</p>
-  </li>
-  <li>
-    <h3>comments</h3>
-    <p>${image.comments}</p>
-  </li>
-  <li>
-    <h3>downloads</h3>
-    <p>${image.downloads}</p>
-  </li>
-    </ul>
-  </a></li>`
-    )
-    .join('');
-
-  setGallery.insertAdjacentHTML('beforeend', imgGallery);
-
-  const lightbox = new SimpleLightbox('.gallery a', {
+export const listOfPhotos = document.querySelector('.gallery');
+const lightbox = new SimpleLightbox('.gallery a', {
     captionsData: 'alt',
-  });
+    captionDelay: 250
+});
 
-  lightbox.refresh();
+export function renderPhotos(arr) {
+        const markup = arr.map(({ largeImageURL, webformatURL, tags, likes, views, comments, downloads }) => {
+            return `<li class="photos-list-item">
+            <a class="photos-list-link" href="${largeImageURL}">
+            <img class="photo" src="${webformatURL}" alt="${tags}"/>
+            </a>
+            <ul class="photo-information-container">
+            <li class="item-photo-information-container"><p><span class="accent">Likes</span></br>${likes}</p></li>
+            <li class="item-photo-information-container"><p><span class="accent">Views</span></br>${views}</p></li>
+            <li class="item-photo-information-container"><p><span class="accent">Comments</span></br>${comments}</p></li>
+            <li class="item-photo-information-container"><p><span class="accent">Downloads</span></br>${downloads}</p></li>
+            </ul>
+            </li>`;
+        })
+            .join("");
+        listOfPhotos.insertAdjacentHTML("beforeend", markup);
+        lightbox.refresh();
 }
